@@ -1,1701 +1,536 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NexCell – Dein Netz. Deine Freiheit.</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>NexCell – Mobilfunk</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --c-bg: #060a14;
-  --c-bg2: #0b1220;
-  --c-accent: #00d4ff;
-  --c-accent2: #7b5fff;
-  --c-accent3: #ff5fcb;
-  --c-text: #e8f0fe;
-  --c-muted: #7a8baa;
-  --c-glass-bg: rgba(255,255,255,0.06);
-  --c-glass-border: rgba(255,255,255,0.13);
-  --c-glass-shine: rgba(255,255,255,0.18);
-  --blur: blur(28px);
-  --r: 24px;
-  --font-head: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --tr-mode: #060a14;
-  --tr-flag-accent: #e30a17;
-}
-
-[data-lang="tr"] {
-  --c-accent: #ff4444;
-  --c-accent2: #ff8c00;
-  --c-accent3: #ffcc00;
-  --c-bg: #0a0606;
-  --c-bg2: #130a08;
-  --tr-mode: #0a0606;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--c-bg);
-  color: var(--c-text);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
-  transition: background 0.6s, color 0.4s;
+:root {
+  --bg: #ffffff; --bg2: #f5f5f7; --text: #1d1d1f; --text2: #6e6e73; --text3: #aeaeb2;
+  --accent: #0066cc; --accent-h: #0077ed; --border: rgba(0,0,0,0.1);
+  --shadow: 0 2px 20px rgba(0,0,0,0.06); --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
+  --r: 18px; --f: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
-/* NOISE OVERLAY */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
-}
-
-/* ORBS */
-.orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(90px);
-  pointer-events: none;
-  z-index: 0;
-  animation: orbFloat 12s ease-in-out infinite alternate;
-}
-.orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,212,255,0.18), transparent 70%); top: -15%; left: -10%; animation-delay: 0s; }
-.orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(123,95,255,0.18), transparent 70%); bottom: 10%; right: -10%; animation-delay: -4s; }
-.orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(255,95,203,0.12), transparent 70%); top: 50%; left: 50%; animation-delay: -7s; }
-
-@keyframes orbFloat {
-  0% { transform: translate(0,0) scale(1); }
-  100% { transform: translate(40px, 50px) scale(1.1); }
-}
-
-/* LIQUID GLASS MIXIN */
-.glass {
-  background: var(--c-glass-bg);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--c-glass-border);
-  border-radius: var(--r);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(.2,.8,.2,1);
-}
-.glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--c-glass-shine) 0%, transparent 50%, transparent 100%);
-  border-radius: var(--r);
-  pointer-events: none;
-}
-.glass:hover {
-  border-color: rgba(255,255,255,0.25);
-  transform: translateY(-3px);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-}
+[data-lang="tr"] { --accent: #cc0000; --accent-h: #dd0000; }
+body { font-family: var(--f); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
 /* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 1000;
-  padding: 16px 40px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(6,10,20,0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--c-glass-border);
-  transition: background 0.4s;
-}
-.nav-logo {
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 1.6rem;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
-}
-.nav-logo .tr-badge {
-  display: none;
-  font-size: 0.55em;
-  background: var(--tr-flag-accent);
-  -webkit-text-fill-color: white;
-  color: white;
-  padding: 2px 5px;
-  border-radius: 4px;
-  margin-left: 4px;
-  vertical-align: super;
-  font-weight: 700;
-}
-[data-lang="tr"] .nav-logo .tr-badge { display: inline; }
-
-.nav-links {
-  display: flex; gap: 32px; list-style: none;
-}
-.nav-links a {
-  color: var(--c-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: color 0.3s;
-  position: relative;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px; left: 0; right: 0;
-  height: 2px;
-  background: var(--c-accent);
-  transform: scaleX(0);
-  transition: transform 0.3s;
-  border-radius: 2px;
-}
-.nav-links a:hover { color: var(--c-text); }
-.nav-links a:hover::after { transform: scaleX(1); }
-
-.nav-right { display: flex; align-items: center; gap: 16px; }
-
-/* LANG SWITCHER */
-.lang-switcher {
-  display: flex;
-  background: var(--c-glass-bg);
-  border: 1px solid var(--c-glass-border);
-  border-radius: 50px;
-  padding: 3px;
-  gap: 2px;
-  backdrop-filter: blur(12px);
-}
-.lang-btn {
-  padding: 6px 14px;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 600;
-  transition: all 0.3s;
-  background: transparent;
-  color: var(--c-muted);
-  display: flex; align-items: center; gap: 6px;
-}
-.lang-btn.active {
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  color: white;
-  box-shadow: 0 4px 20px rgba(0,212,255,0.3);
-}
-.flag { font-size: 1em; }
-
-.btn-nav {
-  padding: 10px 22px;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  border: none;
-  border-radius: 50px;
-  color: white;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.88rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 20px rgba(0,212,255,0.25);
-  letter-spacing: 0.02em;
-}
-.btn-nav:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0,212,255,0.4);
-}
+nav { position: fixed; top: 0; inset-x: 0; z-index: 100; height: 52px; display: flex; align-items: center; padding: 0 24px; background: rgba(255,255,255,0.82); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+.logo-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; transition: background 0.3s; }
+.tr-suffix { display: none; font-size: 0.68rem; font-weight: 700; color: var(--accent); background: rgba(204,0,0,0.08); padding: 2px 6px; border-radius: 4px; letter-spacing: 0.04em; }
+[data-lang="tr"] .tr-suffix { display: inline; }
+.nav-links { display: flex; gap: 0; margin-left: 36px; list-style: none; }
+.nav-links a { font-size: 0.88rem; font-weight: 400; color: var(--text2); text-decoration: none; padding: 6px 14px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+.nav-links a:hover { color: var(--text); background: rgba(0,0,0,0.04); }
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lang-toggle { display: flex; align-items: center; background: var(--bg2); border-radius: 20px; padding: 3px; gap: 2px; }
+.lang-toggle button { border: none; background: none; padding: 4px 12px; border-radius: 16px; font-family: var(--f); font-size: 0.8rem; font-weight: 500; cursor: pointer; color: var(--text2); transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
+.lang-toggle button.on { background: var(--bg); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.btn-cta-nav { background: var(--accent); color: #fff; border: none; border-radius: 20px; padding: 7px 18px; font-family: var(--f); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+.btn-cta-nav:hover { background: var(--accent-h); transform: translateY(-1px); }
 
 /* HERO */
-#hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 120px 40px 80px;
-  position: relative;
-  z-index: 1;
-}
+#hero { padding: 120px 24px 80px; text-align: center; background: linear-gradient(180deg, #f0f6ff 0%, #fff 100%); position: relative; overflow: hidden; }
+[data-lang="tr"] #hero { background: linear-gradient(180deg, #fff0f0 0%, #fff 100%); }
+#hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%); opacity: 0.4; pointer-events: none; }
+.hero-label { display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 500; color: var(--accent); background: rgba(0,102,204,0.08); border: 1px solid rgba(0,102,204,0.15); border-radius: 20px; padding: 5px 14px; margin-bottom: 24px; animation: up 0.6s ease both; }
+[data-lang="tr"] .hero-label { background: rgba(204,0,0,0.06); border-color: rgba(204,0,0,0.12); }
+.live-dot { width: 6px; height: 6px; background: #30d158; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero-h1 { font-size: clamp(2.6rem, 5.5vw, 4.8rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; color: var(--text); margin-bottom: 20px; animation: up 0.6s 0.08s ease both; }
+.hero-h1 span { color: var(--accent); }
+.hero-p { font-size: 1.1rem; color: var(--text2); font-weight: 400; max-width: 520px; margin: 0 auto 40px; line-height: 1.6; animation: up 0.6s 0.14s ease both; }
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; animation: up 0.6s 0.2s ease both; }
+.btn-primary { background: var(--accent); color: #fff; border: none; border-radius: 980px; padding: 14px 30px; font-family: var(--f); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; }
+.btn-primary:hover { background: var(--accent-h); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,102,204,0.3); }
+.btn-ghost { background: rgba(0,0,0,0.05); color: var(--text); border: none; border-radius: 980px; padding: 14px 30px; font-family: var(--f); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+.btn-ghost:hover { background: rgba(0,0,0,0.09); transform: translateY(-2px); }
+.hero-stats { display: flex; justify-content: center; gap: 0; margin-top: 72px; border-top: 1px solid var(--border); padding-top: 36px; animation: up 0.6s 0.28s ease both; }
+.h-stat { padding: 0 48px; border-right: 1px solid var(--border); text-align: center; }
+.h-stat:last-child { border-right: none; }
+.h-stat-num { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.04em; color: var(--text); line-height: 1.1; }
+.h-stat-lbl { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+@keyframes up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(0,212,255,0.1);
-  border: 1px solid rgba(0,212,255,0.25);
-  border-radius: 50px;
-  padding: 6px 18px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--c-accent);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 28px;
-  animation: fadeSlideUp 0.8s ease both;
-}
-.eyebrow-dot {
-  width: 6px; height: 6px;
-  background: var(--c-accent);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
-
-.hero-title {
-  font-family: var(--font-head);
-  font-size: clamp(3.2rem, 8vw, 7.5rem);
-  font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-bottom: 28px;
-  animation: fadeSlideUp 0.8s 0.1s ease both;
-}
-.hero-title .line-1 { display: block; }
-.hero-title .line-2 {
-  display: block;
-  background: linear-gradient(135deg, var(--c-accent) 0%, var(--c-accent2) 50%, var(--c-accent3) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% 200%;
-  animation: gradShift 4s ease infinite, fadeSlideUp 0.8s 0.15s ease both;
-}
-@keyframes gradShift {
-  0%,100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.hero-sub {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  color: var(--c-muted);
-  max-width: 600px;
-  margin: 0 auto 48px;
-  font-weight: 300;
-  animation: fadeSlideUp 0.8s 0.2s ease both;
-}
-
-.hero-actions {
-  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-  animation: fadeSlideUp 0.8s 0.3s ease both;
-}
-.btn-primary {
-  padding: 16px 36px;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  border: none;
-  border-radius: 50px;
-  color: white;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 8px 40px rgba(0,212,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.01em;
-}
-.btn-primary::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-  border-radius: 50px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 60px rgba(0,212,255,0.5); }
-
-.btn-secondary {
-  padding: 16px 36px;
-  background: var(--c-glass-bg);
-  border: 1px solid var(--c-glass-border);
-  border-radius: 50px;
-  color: var(--c-text);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.4s;
-  backdrop-filter: blur(12px);
-  letter-spacing: 0.01em;
-}
-.btn-secondary:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-2px); background: rgba(255,255,255,0.1); }
-
-/* SCROLL INDICATOR */
-.scroll-ind {
-  position: absolute; bottom: 36px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  color: var(--c-muted); font-size: 0.75rem; letter-spacing: 0.1em;
-  animation: fadeSlideUp 1s 0.8s both, bobble 2s 2s ease-in-out infinite;
-}
-.scroll-line {
-  width: 1px; height: 50px;
-  background: linear-gradient(to bottom, var(--c-accent), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
-@keyframes bobble { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
-
-/* STATS BAND */
-#stats {
-  padding: 60px 40px;
-  position: relative; z-index: 1;
-}
-.stats-inner {
-  max-width: 1000px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--c-glass-border);
-  border-radius: 20px; overflow: hidden;
-}
-.stat-item {
-  background: var(--c-glass-bg);
-  backdrop-filter: blur(24px);
-  padding: 36px 28px;
-  text-align: center;
-  transition: background 0.3s;
-}
-.stat-item:hover { background: rgba(255,255,255,0.1); }
-.stat-num {
-  font-family: var(--font-head);
-  font-size: 2.8rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-.stat-label { color: var(--c-muted); font-size: 0.85rem; font-weight: 500; }
-
-/* SECTION HEADERS */
-.section-header {
-  text-align: center;
-  margin-bottom: 70px;
-}
-.section-tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--c-accent);
-  margin-bottom: 16px;
-}
-.section-title {
-  font-family: var(--font-head);
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin-bottom: 16px;
-}
-.section-sub {
-  color: var(--c-muted);
-  font-size: 1rem;
-  max-width: 520px;
-  margin: 0 auto;
-  font-weight: 300;
-}
+/* WRAP & SECTION */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 96px 24px; }
+.sec-tag { font-size: 0.78rem; font-weight: 600; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+.sec-h { font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; color: var(--text); }
+.sec-p { font-size: 1rem; color: var(--text2); max-width: 480px; line-height: 1.65; font-weight: 400; }
 
 /* PLANS */
-#plans {
-  padding: 100px 40px;
-  position: relative; z-index: 1;
-}
-.plans-grid {
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 24px; align-items: start;
-}
+#plans { background: var(--bg2); }
+.plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 1080px; margin: 56px auto 0; }
+.plan { background: #fff; border-radius: var(--r); padding: 32px 28px; border: 1px solid var(--border); transition: box-shadow 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+.plan:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+.plan.hot { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-lg); }
+.plan.hot:hover { transform: translateY(-6px); box-shadow: 0 0 0 1px var(--accent), 0 16px 48px rgba(0,102,204,0.18); }
+.plan::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 60px; background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%); pointer-events: none; border-radius: var(--r) var(--r) 0 0; }
+.plan-top-badge { display: none; position: absolute; top: 16px; right: 16px; background: var(--accent); color: #fff; font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em; text-transform: uppercase; }
+.hot .plan-top-badge { display: block; }
+.plan-tier { font-size: 0.75rem; font-weight: 600; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.plan-name { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px; color: var(--text); }
+.plan-desc { font-size: 0.85rem; color: var(--text2); margin-bottom: 28px; }
+.plan-data { display: flex; align-items: baseline; gap: 6px; margin-bottom: 24px; }
+.plan-data-num { font-size: 3rem; font-weight: 700; letter-spacing: -0.05em; color: var(--text); line-height: 1; }
+.plan-data-unit { font-size: 0.9rem; color: var(--text2); font-weight: 500; }
+.plan-data-eu { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; color: #0060c0; background: rgba(0,96,192,0.07); border: 1px solid rgba(0,96,192,0.12); padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-weight: 600; }
+.plan-price-row { display: flex; align-items: baseline; gap: 4px; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.plan-eur { font-size: 1rem; font-weight: 500; color: var(--text2); margin-top: 4px; align-self: flex-start; }
+.plan-price { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.05em; color: var(--text); line-height: 1; }
+.plan-mo { font-size: 0.85rem; color: var(--text2); }
+.plan-feats { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; font-size: 0.88rem; }
+.plan-feats li { display: flex; align-items: center; gap: 10px; color: var(--text2); }
+.f-check { width: 18px; height: 18px; border-radius: 50%; background: rgba(0,102,204,0.09); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.62rem; flex-shrink: 0; font-weight: 700; }
+.btn-plan { width: 100%; padding: 13px; border-radius: 12px; font-family: var(--f); font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+.btn-plan-primary { background: var(--accent); color: #fff; }
+.btn-plan-primary:hover { background: var(--accent-h); transform: translateY(-1px); }
+.btn-plan-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+.btn-plan-outline:hover { background: var(--bg2); border-color: #bbb; }
 
-.plan-card {
-  background: var(--c-glass-bg);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--c-glass-border);
-  border-radius: 28px;
-  padding: 40px 32px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(.2,.8,.2,1);
-  cursor: default;
-}
-.plan-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--c-glass-shine), transparent);
-}
-.plan-card::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
-  pointer-events: none;
-}
-.plan-card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(255,255,255,0.25);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,255,0.15);
-}
-.plan-card.featured {
-  border-color: rgba(0,212,255,0.4);
-  background: rgba(0,212,255,0.06);
-  transform: scale(1.03) translateY(-6px);
-  box-shadow: 0 30px 80px rgba(0,212,255,0.2), 0 0 0 1px rgba(0,212,255,0.2);
-}
-.plan-card.featured:hover {
-  transform: scale(1.05) translateY(-12px);
-  box-shadow: 0 50px 100px rgba(0,212,255,0.3);
-}
+/* FEATURES */
+.feats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; max-width: 1080px; margin: 56px auto 0; }
+.feat-card { background: var(--bg2); border-radius: 16px; padding: 28px 24px; border: 1px solid transparent; transition: border-color 0.25s, background 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+.feat-card:hover { background: #fff; border-color: var(--border); transform: translateY(-3px); box-shadow: var(--shadow); }
+.feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); }
+.feat-icon { font-size: 1.4rem; margin-bottom: 16px; display: block; }
+.feat-card h3 { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--text); }
+.feat-card p { font-size: 0.85rem; color: var(--text2); line-height: 1.65; }
 
-.plan-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  margin-bottom: 24px;
-  text-transform: uppercase;
-}
-.badge-xs { background: rgba(123,95,255,0.15); color: var(--c-accent2); border: 1px solid rgba(123,95,255,0.3); }
-.badge-m  { background: rgba(0,212,255,0.15); color: var(--c-accent); border: 1px solid rgba(0,212,255,0.3); }
-.badge-xl { background: rgba(255,95,203,0.15); color: var(--c-accent3); border: 1px solid rgba(255,95,203,0.3); }
-.badge-popular {
-  position: absolute; top: 20px; right: 20px;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  color: white; font-size: 0.68rem; font-weight: 700;
-  padding: 4px 10px; border-radius: 50px; letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.plan-name {
-  font-family: var(--font-head);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.02em;
-}
-.plan-tagline { color: var(--c-muted); font-size: 0.88rem; margin-bottom: 28px; font-weight: 300; }
-
-.plan-price-row {
-  display: flex; align-items: baseline; gap: 4px;
-  margin-bottom: 32px;
-}
-.plan-price {
-  font-family: var(--font-head);
-  font-size: 3.2rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-.plan-currency { font-size: 1.4rem; font-weight: 600; color: var(--c-muted); align-self: flex-start; padding-top: 6px; }
-.plan-period { color: var(--c-muted); font-size: 0.88rem; }
-
-.plan-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--c-glass-border), transparent);
-  margin-bottom: 28px;
-}
-
-.plan-features { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 13px; }
-.plan-features li {
-  display: flex; align-items: flex-start; gap: 12px;
-  font-size: 0.9rem; color: var(--c-text);
-}
-.feat-icon {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem;
-  margin-top: 1px;
-}
-.feat-yes { background: rgba(0,212,255,0.15); color: var(--c-accent); }
-.feat-extra { background: rgba(123,95,255,0.15); color: var(--c-accent2); }
-
-.btn-book {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 16px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(.2,.8,.2,1);
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.02em;
-}
-.btn-book-primary {
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  color: white;
-  box-shadow: 0 8px 32px rgba(0,212,255,0.3);
-}
-.btn-book-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,212,255,0.5); }
-.btn-book-outline {
-  background: transparent;
-  color: var(--c-text);
-  border: 1px solid var(--c-glass-border);
-}
-.btn-book-outline:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); transform: translateY(-2px); }
-
-.plan-data-pill {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: rgba(0,212,255,0.07);
-  border: 1px solid rgba(0,212,255,0.15);
-  border-radius: 12px;
-  margin-bottom: 28px;
-}
-.data-amount {
-  font-family: var(--font-head);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--c-accent);
-  letter-spacing: -0.02em;
-}
-.data-label { color: var(--c-muted); font-size: 0.8rem; font-weight: 500; }
-
-/* FEATURES SECTION */
-#features {
-  padding: 100px 40px;
-  position: relative; z-index: 1;
-}
-.features-grid {
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-.feat-card {
-  padding: 36px 28px;
-}
-.feat-card-icon {
-  width: 56px; height: 56px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  position: relative;
-}
-.icon-cyan { background: rgba(0,212,255,0.12); }
-.icon-purple { background: rgba(123,95,255,0.12); }
-.icon-pink { background: rgba(255,95,203,0.12); }
-.icon-green { background: rgba(0,255,150,0.12); }
-.icon-orange { background: rgba(255,150,0,0.12); }
-.icon-blue { background: rgba(80,120,255,0.12); }
-
-.feat-card h3 {
-  font-family: var(--font-head);
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-  letter-spacing: -0.02em;
-}
-.feat-card p { color: var(--c-muted); font-size: 0.88rem; line-height: 1.65; font-weight: 300; }
-
-/* NETWORK SECTION */
-#network {
-  padding: 100px 40px;
-  position: relative; z-index: 1;
-}
-.network-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 60px; align-items: center;
-}
-.network-text h2 {
-  font-family: var(--font-head);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 20px;
-  line-height: 1.1;
-}
-.network-text p { color: var(--c-muted); font-weight: 300; margin-bottom: 32px; }
-.network-bars { display: flex; flex-direction: column; gap: 18px; }
-.net-bar-row { display: flex; flex-direction: column; gap: 6px; }
-.net-bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; }
-.net-bar-label span:last-child { color: var(--c-accent); font-weight: 600; }
-.net-bar-track {
-  height: 8px; background: rgba(255,255,255,0.06);
-  border-radius: 50px; overflow: hidden;
-}
-.net-bar-fill {
-  height: 100%; border-radius: 50px;
-  background: linear-gradient(90deg, var(--c-accent), var(--c-accent2));
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 1.2s cubic-bezier(.2,.8,.2,1);
-}
-.net-bar-fill.animated { transform: scaleX(1); }
-
-.network-visual {
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-  height: 380px;
-}
-.net-glow-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(0,212,255,0.15);
-  animation: ringPulse 3s ease-in-out infinite;
-}
-.ring-1 { width: 140px; height: 140px; animation-delay: 0s; }
-.ring-2 { width: 240px; height: 240px; animation-delay: 0.4s; }
-.ring-3 { width: 340px; height: 340px; animation-delay: 0.8s; }
-@keyframes ringPulse {
-  0%,100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.03); }
-}
-.net-center {
-  width: 90px; height: 90px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2rem;
-  box-shadow: 0 0 60px rgba(0,212,255,0.4);
-  position: relative; z-index: 2;
-  animation: centerPulse 2s ease-in-out infinite;
-}
-@keyframes centerPulse {
-  0%,100% { box-shadow: 0 0 40px rgba(0,212,255,0.3); }
-  50% { box-shadow: 0 0 80px rgba(0,212,255,0.6); }
-}
-
-/* COVERAGE MAP */
-.coverage-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  margin-top: 20px;
-}
-.cov-dot {
-  width: 100%; aspect-ratio: 1;
-  border-radius: 3px;
-  background: rgba(0,212,255,0.08);
-  transition: all 0.3s;
-  animation: covBlink var(--delay) ease-in-out infinite alternate;
-}
-.cov-dot.active { background: rgba(0,212,255,0.25); }
-.cov-dot.strong { background: rgba(0,212,255,0.5); }
-@keyframes covBlink {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
+/* COVERAGE */
+#coverage { background: #fff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.cov-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1080px; margin: 0 auto; }
+.cov-bars { display: flex; flex-direction: column; gap: 20px; margin-top: 32px; }
+.cov-bar-labels { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 7px; color: var(--text2); }
+.cov-bar-labels strong { color: var(--text); font-weight: 600; font-size: 0.82rem; }
+.cov-track { height: 6px; background: var(--bg2); border-radius: 10px; overflow: hidden; }
+.cov-fill { height: 100%; border-radius: 10px; background: var(--accent); width: 0%; transition: width 1.4s cubic-bezier(.22,.8,.2,1); }
+.cov-visual { display: flex; align-items: center; justify-content: center; }
+.cov-card-stack { position: relative; width: 280px; height: 320px; }
+.cov-card-bg { position: absolute; border-radius: 20px; border: 1px solid var(--border); }
+.cov-card-bg:nth-child(1) { inset: 40px 0 0 40px; background: var(--bg2); }
+.cov-card-bg:nth-child(2) { inset: 20px 20px 20px 20px; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); box-shadow: var(--shadow); }
+.cov-card-main { position: absolute; inset: 0 40px 40px 0; background: rgba(255,255,255,0.85); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.8); box-shadow: var(--shadow-lg); padding: 28px 24px; display: flex; flex-direction: column; justify-content: space-between; }
+.cov-card-main h4 { font-size: 0.78rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; }
+.cov-num { font-size: 3.5rem; font-weight: 700; letter-spacing: -0.06em; color: var(--text); line-height: 1; margin-top: 6px; }
+.cov-num span { font-size: 1.8rem; }
+.cov-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(48,209,88,0.1); border: 1px solid rgba(48,209,88,0.2); color: #1a9e3a; padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+.cov-badge-dot { width: 6px; height: 6px; background: #30d158; border-radius: 50%; animation: blink 2s infinite; }
 
 /* FAQ */
-#faq {
-  padding: 100px 40px;
-  position: relative; z-index: 1;
-}
-.faq-inner { max-width: 720px; margin: 0 auto; }
-.faq-item {
-  border-bottom: 1px solid var(--c-glass-border);
-  padding: 24px 0;
-  cursor: pointer;
-}
-.faq-q {
-  display: flex; justify-content: space-between; align-items: center;
-  font-weight: 600; font-size: 1rem;
-  gap: 20px;
-}
-.faq-arrow {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--c-glass-bg);
-  border: 1px solid var(--c-glass-border);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.3s;
-  font-size: 0.8rem;
-}
-.faq-item.open .faq-arrow { transform: rotate(180deg); background: var(--c-accent); border-color: var(--c-accent); }
-.faq-a {
-  color: var(--c-muted); font-size: 0.9rem; font-weight: 300;
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.3s;
-  line-height: 1.7;
-}
-.faq-item.open .faq-a { max-height: 200px; padding-top: 14px; }
+#faq { background: var(--bg2); }
+.faq-list { max-width: 680px; margin: 48px auto 0; }
+.faq-row { border-bottom: 1px solid var(--border); padding: 20px 0; cursor: pointer; }
+.faq-row:first-child { border-top: 1px solid var(--border); }
+.faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; font-weight: 500; gap: 20px; color: var(--text); }
+.faq-icon { width: 24px; height: 24px; border: 1.5px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; color: var(--text2); transition: all 0.25s; }
+.faq-row.open .faq-icon { background: var(--accent); border-color: var(--accent); color: #fff; transform: rotate(45deg); }
+.faq-a { font-size: 0.88rem; color: var(--text2); max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; line-height: 1.7; }
+.faq-row.open .faq-a { max-height: 180px; padding-top: 12px; }
 
-/* FOOTER */
-footer {
-  padding: 80px 40px 40px;
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--c-glass-border);
-}
-.footer-inner {
-  max-width: 1100px; margin: 0 auto;
-}
-.footer-top {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px; margin-bottom: 60px;
-}
-.footer-brand p {
-  color: var(--c-muted); font-size: 0.88rem; margin-top: 12px;
-  max-width: 280px; font-weight: 300; line-height: 1.7;
-}
-.footer-col h4 {
-  font-family: var(--font-head);
-  font-weight: 700; font-size: 0.9rem;
-  margin-bottom: 16px; letter-spacing: -0.01em;
-}
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.footer-col ul a {
-  color: var(--c-muted); font-size: 0.88rem; text-decoration: none;
-  transition: color 0.3s; font-weight: 300;
-}
-.footer-col ul a:hover { color: var(--c-text); }
-.footer-bottom {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-top: 28px;
-  border-top: 1px solid var(--c-glass-border);
-  color: var(--c-muted); font-size: 0.82rem;
-}
-
-/* MODAL / BOOKING */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(6,10,20,0.8);
-  backdrop-filter: blur(12px);
-  z-index: 2000;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.4s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-
-.modal {
-  background: #0f1828;
-  border: 1px solid var(--c-glass-border);
-  border-radius: 28px;
-  padding: 48px;
-  max-width: 540px; width: 100%;
-  position: relative;
-  overflow: hidden;
-  transform: translateY(30px) scale(0.96);
-  transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
-}
-.modal-overlay.open .modal { transform: translateY(0) scale(1); }
-.modal::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--c-accent), transparent);
-}
-
-.modal-close {
-  position: absolute; top: 20px; right: 20px;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--c-glass-border);
-  background: var(--c-glass-bg);
-  color: var(--c-muted);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  transition: all 0.3s;
-}
-.modal-close:hover { background: rgba(255,255,255,0.1); color: var(--c-text); }
-
-.modal-plan-header {
-  display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
-}
-.modal-plan-icon {
-  width: 52px; height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem;
-}
-.modal-plan-name { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; }
-.modal-plan-price { color: var(--c-accent); font-weight: 600; font-size: 0.9rem; }
-
-.form-group {
-  margin-bottom: 20px;
-}
-.form-group label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--c-muted);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 14px 18px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--c-glass-border);
-  border-radius: 12px;
-  color: var(--c-text);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  transition: all 0.3s;
-  outline: none;
-  appearance: none;
-}
-.form-group input:focus, .form-group select:focus {
-  border-color: var(--c-accent);
-  background: rgba(0,212,255,0.05);
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
-}
-.form-group input::placeholder { color: var(--c-muted); }
-.form-group select option { background: #0f1828; }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-.form-check {
-  display: flex; align-items: flex-start; gap: 10px;
-  font-size: 0.85rem; color: var(--c-muted); margin-bottom: 28px;
-}
-.form-check input[type="checkbox"] {
-  width: 18px; height: 18px; flex-shrink: 0;
-  margin-top: 1px;
-  accent-color: var(--c-accent);
-}
-.form-check a { color: var(--c-accent); text-decoration: none; }
-
-.modal-success {
-  display: none; text-align: center; padding: 20px 0;
-}
-.modal-success .success-icon {
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00d4ff, #7b5fff);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.2rem;
-  margin: 0 auto 24px;
-  animation: successPop 0.5s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes successPop {
-  0% { transform: scale(0); }
-  60% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-.modal-success h3 {
-  font-family: var(--font-head);
-  font-size: 1.6rem; font-weight: 800;
-  margin-bottom: 12px;
-}
-.modal-success p { color: var(--c-muted); font-size: 0.9rem; }
+/* MODAL */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.overlay.on { opacity: 1; pointer-events: all; }
+.modal { background: #fff; border-radius: 24px; padding: 40px; width: 100%; max-width: 500px; position: relative; transform: translateY(24px) scale(0.97); transition: transform 0.35s cubic-bezier(.22,.8,.2,1); box-shadow: 0 32px 80px rgba(0,0,0,0.18); border-top: 1px solid rgba(255,255,255,0.9); }
+.overlay.on .modal { transform: translateY(0) scale(1); }
+.modal-x { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg2); color: var(--text2); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.modal-x:hover { background: #e5e5ea; }
+.modal-plan-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.modal-plan-ico { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,102,204,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+[data-lang="tr"] .modal-plan-ico { background: rgba(204,0,0,0.08); }
+.modal-plan-name { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+.modal-plan-price { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-top: 2px; }
+.form-g { margin-bottom: 16px; }
+.form-g label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text2); letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 7px; }
+.form-g input, .form-g select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: var(--f); font-size: 0.92rem; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; }
+.form-g input:focus, .form-g select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
+.form-g input::placeholder { color: var(--text3); }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-check { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83rem; color: var(--text2); margin-bottom: 22px; }
+.form-check input { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: var(--accent); }
+.form-check a { color: var(--accent); text-decoration: none; }
+.modal-success { display: none; text-align: center; padding: 16px 0; }
+.success-check { width: 64px; height: 64px; background: rgba(48,209,88,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 20px; animation: pop 0.4s cubic-bezier(.2,.8,.2,1); border: 1px solid rgba(48,209,88,0.2); }
+@keyframes pop { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-success h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
+.modal-success p { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
 
 /* TOAST */
-.toast {
-  position: fixed; bottom: 32px; right: 32px;
-  background: #0f1828;
-  border: 1px solid rgba(0,212,255,0.3);
-  border-radius: 14px;
-  padding: 16px 22px;
-  display: flex; align-items: center; gap: 12px;
-  font-size: 0.88rem; font-weight: 500;
-  z-index: 3000;
-  transform: translateY(100px) scale(0.9);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-}
-.toast.show { transform: translateY(0) scale(1); opacity: 1; }
-.toast-icon { font-size: 1.2rem; }
+.toast { position: fixed; bottom: 28px; right: 28px; background: var(--text); color: #fff; padding: 13px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; z-index: 999; display: flex; align-items: center; gap: 10px; transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(.22,.8,.2,1); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.toast.show { transform: translateY(0); opacity: 1; }
 
-/* ANIMATIONS */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 0; transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-.reveal-delay-5 { transition-delay: 0.5s; }
+/* FOOTER */
+footer { background: #fff; border-top: 1px solid var(--border); padding: 60px 24px 40px; }
+.footer-g { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1080px; margin: 0 auto 40px; }
+.footer-brand-desc { font-size: 0.85rem; color: var(--text2); margin-top: 10px; line-height: 1.6; max-width: 240px; }
+.footer-col h5 { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul a { font-size: 0.85rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+.footer-col ul a:hover { color: var(--text); }
+.footer-bottom { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text2); }
 
-/* TICKER */
-.ticker-wrap {
-  overflow: hidden; white-space: nowrap;
-  padding: 14px 0;
-  background: rgba(0,212,255,0.04);
-  border-top: 1px solid rgba(0,212,255,0.1);
-  border-bottom: 1px solid rgba(0,212,255,0.1);
-  position: relative; z-index: 1;
-}
-.ticker-track {
-  display: inline-flex;
-  animation: ticker 35s linear infinite;
-}
-.ticker-item {
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 0 48px;
-  color: var(--c-muted); font-size: 0.82rem; font-weight: 500;
-  letter-spacing: 0.04em;
-}
-.ticker-dot { color: var(--c-accent); font-size: 0.5rem; }
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* REVEAL */
+.r { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.r.v { opacity: 1; transform: translateY(0); }
+.r.d1{transition-delay:0.08s} .r.d2{transition-delay:0.16s} .r.d3{transition-delay:0.24s} .r.d4{transition-delay:0.32s} .r.d5{transition-delay:0.40s}
 
-/* MOBILE NAV */
-.nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-.nav-burger span { width: 24px; height: 2px; background: var(--c-text); border-radius: 2px; transition: all 0.3s; }
-
-/* EU BADGE */
-.eu-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 3px 10px;
-  background: rgba(0,80,200,0.15);
-  border: 1px solid rgba(0,80,200,0.3);
-  border-radius: 50px;
-  font-size: 0.72rem; font-weight: 700; color: #7aadff;
-  margin-left: 6px;
-}
-
-/* COMPARISON TABLE */
-#compare {
-  padding: 80px 40px;
-  position: relative; z-index: 1;
-}
-.compare-table-wrap {
-  max-width: 900px; margin: 0 auto;
-  overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid var(--c-glass-border);
-  backdrop-filter: blur(20px);
-}
-.compare-table {
-  width: 100%; border-collapse: collapse;
-}
-.compare-table th, .compare-table td {
-  padding: 18px 24px;
-  text-align: center;
-  border-bottom: 1px solid var(--c-glass-border);
-  font-size: 0.9rem;
-}
-.compare-table th {
-  font-family: var(--font-head);
-  font-weight: 700;
-  background: rgba(0,212,255,0.05);
-  font-size: 1rem;
-}
-.compare-table td:first-child, .compare-table th:first-child {
-  text-align: left;
-  color: var(--c-muted);
-  font-weight: 400;
-}
-.compare-table tr:last-child td { border-bottom: none; }
-.compare-table tr:hover td { background: rgba(255,255,255,0.02); }
-.compare-table .highlight { color: var(--c-accent); font-weight: 700; }
-.check { color: #00e87a; }
-.cross { color: var(--c-muted); }
-
-/* LANG TRANSITION */
-[data-de], [data-tr] { transition: opacity 0.2s; }
+/* DE/TR visibility */
 [data-lang="de"] [data-tr] { display: none; }
 [data-lang="tr"] [data-de] { display: none; }
 
-@media (max-width: 900px) {
-  .plans-grid, .features-grid { grid-template-columns: 1fr; }
-  .network-inner { grid-template-columns: 1fr; }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-  .stats-inner { grid-template-columns: repeat(2, 1fr); }
-  nav { padding: 14px 20px; }
-  .nav-links { display: none; }
-  .nav-burger { display: flex; }
-  .hero-title { font-size: clamp(2.5rem, 10vw, 5rem); }
+@media(max-width:860px){
+  .plans-grid,.feats-grid{grid-template-columns:1fr}
+  .cov-inner{grid-template-columns:1fr;gap:40px}
+  .footer-g{grid-template-columns:1fr 1fr}
+  .h-stat{padding:0 20px;border-right:none}
+  .hero-stats{flex-wrap:wrap;gap:20px}
+  .nav-links{display:none}
 }
 </style>
 </head>
-<body data-lang="de">
+<body>
 
-<!-- BACKGROUND ORBS -->
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
-
-<!-- NAVIGATION -->
 <nav>
-  <div class="nav-logo">
-    <span data-de>NexCell</span>
-    <span data-tr>NexCell <span class="tr-badge">TR</span></span>
-  </div>
+  <a href="#" class="nav-logo">
+    <span class="logo-dot"></span>
+    NexCell<span class="tr-suffix">TR</span>
+  </a>
   <ul class="nav-links">
     <li><a href="#plans" data-de>Tarife</a><a href="#plans" data-tr>Tarifler</a></li>
     <li><a href="#features" data-de>Features</a><a href="#features" data-tr>Özellikler</a></li>
-    <li><a href="#network" data-de>Netzabdeckung</a><a href="#network" data-tr>Kapsama Alanı</a></li>
-    <li><a href="#faq" data-de>FAQ</a><a href="#faq" data-tr>S.S.S.</a></li>
+    <li><a href="#coverage" data-de>Netzabdeckung</a><a href="#coverage" data-tr>Kapsama</a></li>
+    <li><a href="#faq">FAQ</a></li>
   </ul>
   <div class="nav-right">
-    <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('de')">
-        <span class="flag">🇩🇪</span> DE
-      </button>
-      <button class="lang-btn" onclick="setLang('tr')">
-        <span class="flag">🇹🇷</span> TR
-      </button>
+    <div class="lang-toggle">
+      <button class="on" onclick="setLang('de')">🇩🇪 DE</button>
+      <button onclick="setLang('tr')">🇹🇷 TR</button>
     </div>
-    <button class="btn-nav" onclick="scrollToPlans()">
-      <span data-de>Tarif wählen</span>
-      <span data-tr>Tarif Seç</span>
+    <button class="btn-cta-nav" onclick="goPlan()">
+      <span data-de>Tarif wählen</span><span data-tr>Tarif Seç</span>
     </button>
-    <div class="nav-burger" onclick="toggleMobileMenu()">
-      <span></span><span></span><span></span>
-    </div>
   </div>
 </nav>
 
-<!-- TICKER -->
-<div class="ticker-wrap" style="position:relative;z-index:1;margin-top:64px;">
-  <div class="ticker-track" id="tickerTrack">
-    <!-- JS fills this -->
-  </div>
-</div>
-
-<!-- HERO -->
 <section id="hero">
-  <div class="hero-eyebrow">
-    <div class="eyebrow-dot"></div>
-    <span data-de>5G Netz · Deutschland · EU Roaming inklusive</span>
-    <span data-tr>5G Şebeke · Almanya · AB Dolaşımı dahil</span>
+  <div class="hero-label">
+    <div class="live-dot"></div>
+    <span data-de>5G-Netz in ganz Deutschland</span>
+    <span data-tr>Tüm Almanya'da 5G Şebeke</span>
   </div>
-  <h1 class="hero-title">
-    <span class="line-1" data-de>Dein Netz.</span>
-    <span class="line-1" data-tr>Senin Şebeken.</span>
-    <span class="line-2" data-de>Deine Freiheit.</span>
-    <span class="line-2" data-tr>Senin Özgürlüğün.</span>
+  <h1 class="hero-h1">
+    <span data-de>Mobilfunk der<br><span>einfach funktioniert.</span></span>
+    <span data-tr>Sadece <span>çalışan</span><br>mobil iletişim.</span>
   </h1>
-  <p class="hero-sub">
-    <span data-de>Modernste 5G-Verbindung, faire Preise, kein Kleingedrucktes. NexCell – Mobilfunk neu gedacht.</span>
-    <span data-tr>En modern 5G bağlantı, adil fiyatlar, gizli koşul yok. NexCell – mobil iletişimi yeniden düşündük.</span>
+  <p class="hero-p">
+    <span data-de>Kein Vertrag. EU Roaming inklusive. Faire Preise ohne versteckte Kosten.</span>
+    <span data-tr>Sözleşme yok. AB Dolaşımı dahil. Gizli maliyet olmadan adil fiyatlar.</span>
   </p>
-  <div class="hero-actions">
-    <button class="btn-primary" onclick="scrollToPlans()">
-      <span data-de>Tarife entdecken</span>
-      <span data-tr>Tarifleri Keşfet</span>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="goPlan()">
+      <span data-de>Tarife ansehen</span><span data-tr>Tarifleri Gör</span>
     </button>
-    <button class="btn-secondary" onclick="document.getElementById('network').scrollIntoView({behavior:'smooth'})">
-      <span data-de>Netzabdeckung prüfen</span>
-      <span data-tr>Kapsama Alanını Kontrol Et</span>
+    <button class="btn-ghost" onclick="goCov()">
+      <span data-de>Netzabdeckung</span><span data-tr>Kapsama Alanı</span>
     </button>
   </div>
-  <div class="scroll-ind">
-    <div class="scroll-line"></div>
-    <span data-de>Scrollen</span>
-    <span data-tr>Kaydır</span>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="h-stat-num">99.2%</div><div class="h-stat-lbl"><span data-de>Abdeckung Deutschland</span><span data-tr>Almanya Kapsamı</span></div></div>
+    <div class="h-stat"><div class="h-stat-num">5G</div><div class="h-stat-lbl"><span data-de>Netzstandard</span><span data-tr>Şebeke Standardı</span></div></div>
+    <div class="h-stat"><div class="h-stat-num">30+</div><div class="h-stat-lbl"><span data-de>EU-Länder Roaming</span><span data-tr>AB Ülkesi Dolaşım</span></div></div>
+    <div class="h-stat"><div class="h-stat-num">0€</div><div class="h-stat-lbl"><span data-de>Aktivierungsgebühr</span><span data-tr>Aktivasyon Ücreti</span></div></div>
   </div>
 </section>
 
-<!-- STATS -->
-<section id="stats">
-  <div class="stats-inner">
-    <div class="stat-item reveal">
-      <div class="stat-num" data-count="99.2">99.2%</div>
-      <div class="stat-label"><span data-de>Netzabdeckung DE</span><span data-tr>Almanya Kapsama</span></div>
+<section id="plans" class="section">
+  <div class="wrap">
+    <div class="r" style="text-align:center">
+      <span class="sec-tag"><span data-de>Unsere Tarife</span><span data-tr>Tariflerimiz</span></span>
+      <h2 class="sec-h"><span data-de>Einfach. Fair. Transparent.</span><span data-tr>Basit. Adil. Şeffaf.</span></h2>
+      <p class="sec-p" style="margin:0 auto"><span data-de>Monatlich kündbar, keine Aktivierungsgebühr, EU Roaming in allen Tarifen inklusive.</span><span data-tr>Aylık iptal, aktivasyon ücreti yok, tüm tariflerde AB Dolaşımı dahil.</span></p>
     </div>
-    <div class="stat-item reveal reveal-delay-1">
-      <div class="stat-num">5G</div>
-      <div class="stat-label"><span data-de>Highspeed Netz</span><span data-tr>Yüksek Hız Şebeke</span></div>
-    </div>
-    <div class="stat-item reveal reveal-delay-2">
-      <div class="stat-num">30+</div>
-      <div class="stat-label"><span data-de>EU-Länder Roaming</span><span data-tr>AB Ülkesi Dolaşım</span></div>
-    </div>
-    <div class="stat-item reveal reveal-delay-3">
-      <div class="stat-num">24/7</div>
-      <div class="stat-label"><span data-de>Kundensupport</span><span data-tr>Müşteri Desteği</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- PLANS SECTION -->
-<section id="plans">
-  <div class="section-header reveal">
-    <div class="section-tag"><span data-de>Unsere Tarife</span><span data-tr>Tariflerimiz</span></div>
-    <h2 class="section-title">
-      <span data-de>Einfach. Fair. Transparent.</span>
-      <span data-tr>Basit. Adil. Şeffaf.</span>
-    </h2>
-    <p class="section-sub">
-      <span data-de>Keine versteckten Kosten, keine Vertragsfallen. Wähle den Tarif, der zu dir passt.</span>
-      <span data-tr>Gizli maliyet yok, tuzak sözleşme yok. Sana uygun tarifı seç.</span>
-    </p>
-  </div>
-  <div class="plans-grid">
-
-    <!-- SMART XS -->
-    <div class="plan-card reveal" onclick="">
-      <div class="plan-badge badge-xs">⚡ Smart XS</div>
-      <div class="plan-name"><span data-de>Smart XS</span><span data-tr>Smart XS</span></div>
-      <div class="plan-tagline"><span data-de>Perfekt für den Alltag</span><span data-tr>Günlük kullanım için mükemmel</span></div>
-      <div class="plan-data-pill">
-        <div class="data-amount">40 GB</div>
-        <div>
-          <div class="data-label"><span data-de>Datenvolumen</span><span data-tr>Veri Kotası</span></div>
-          <div style="font-size:0.7rem;color:var(--c-accent);font-weight:600"><span data-de>+ EU Roaming inklusive</span><span data-tr>+ AB Dolaşım dahil</span> <span class="eu-badge">🇪🇺 EU</span></div>
+    <div class="plans-grid">
+      <div class="plan r d1">
+        <div class="plan-tier">Smart XS</div>
+        <div class="plan-name"><span data-de>Einsteiger</span><span data-tr>Başlangıç</span></div>
+        <div class="plan-desc"><span data-de>Perfekt für den Alltag</span><span data-tr>Günlük kullanım için</span></div>
+        <div class="plan-data">
+          <div class="plan-data-num">40</div>
+          <div><div class="plan-data-unit">GB</div><div class="plan-data-eu">🇪🇺 EU Roaming</div></div>
         </div>
-      </div>
-      <div class="plan-price-row">
-        <span class="plan-currency">€</span>
-        <span class="plan-price">19</span>
-        <span class="plan-price" style="font-size:2rem">.95</span>
-        <span class="plan-period">/Monat</span>
-      </div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>40 GB Datenvolumen (5G)</span><span data-tr>40 GB veri kotası (5G)</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>EU Roaming 40 GB inklusive</span><span data-tr>AB Dolaşım 40 GB dahil</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Flat Telefonie & SMS in DE</span><span data-tr>TR'de sınırsız telefon ve SMS</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>VoLTE & WLAN-Telefonie</span><span data-tr>VoLTE & WiFi Çağrısı</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>NexCell App & eSIM</span><span data-tr>NexCell Uygulama & eSIM</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Kein Vertrag – monatlich kündbar</span><span data-tr>Sözleşmesiz – aylık iptal</span></li>
-      </ul>
-      <button class="btn-book btn-book-outline" onclick="openBooking('Smart XS','19,95')">
-        <span data-de>Jetzt buchen</span>
-        <span data-tr>Hemen Al</span>
-      </button>
-    </div>
-
-    <!-- SMART M (FEATURED) -->
-    <div class="plan-card featured reveal reveal-delay-1">
-      <div class="badge-popular" data-de>⭐ Beliebtester</div>
-      <div class="badge-popular" data-tr style="display:none">⭐ En Popüler</div>
-      <div class="plan-badge badge-m">🚀 Smart M</div>
-      <div class="plan-name">Smart M</div>
-      <div class="plan-tagline"><span data-de>Mehr Power für dein Leben</span><span data-tr>Hayatın için daha fazla güç</span></div>
-      <div class="plan-data-pill" style="background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.25)">
-        <div class="data-amount">80 GB</div>
-        <div>
-          <div class="data-label"><span data-de>Datenvolumen</span><span data-tr>Veri Kotası</span></div>
-          <div style="font-size:0.7rem;color:var(--c-accent);font-weight:600"><span data-de>+ EU Roaming inklusive</span><span data-tr>+ AB Dolaşım dahil</span> <span class="eu-badge">🇪🇺 EU</span></div>
+        <div class="plan-price-row">
+          <span class="plan-eur">€</span>
+          <span class="plan-price">19<span style="font-size:1.4rem">.95</span></span>
+          <span class="plan-mo">/Monat</span>
         </div>
+        <ul class="plan-feats">
+          <li><span class="f-check">✓</span><span data-de>40 GB Datenvolumen (5G)</span><span data-tr>40 GB veri kotası (5G)</span></li>
+          <li><span class="f-check">✓</span><span data-de>40 GB EU Roaming inkl.</span><span data-tr>40 GB AB Dolaşım dahil</span></li>
+          <li><span class="f-check">✓</span><span data-de>Telefon & SMS Flat DE</span><span data-tr>DE'de sınırsız telefon & SMS</span></li>
+          <li><span class="f-check">✓</span><span data-de>VoLTE & WLAN-Telefonie</span><span data-tr>VoLTE & WiFi Çağrısı</span></li>
+          <li><span class="f-check">✓</span><span data-de>eSIM & physische SIM</span><span data-tr>eSIM & fiziksel SIM</span></li>
+          <li><span class="f-check">✓</span><span data-de>Monatlich kündbar</span><span data-tr>Aylık iptal edilebilir</span></li>
+        </ul>
+        <button class="btn-plan btn-plan-outline" onclick="book('Smart XS','19,95','📱')"><span data-de>Jetzt buchen</span><span data-tr>Hemen Al</span></button>
       </div>
-      <div class="plan-price-row">
-        <span class="plan-currency">€</span>
-        <span class="plan-price">34</span>
-        <span class="plan-price" style="font-size:2rem">.95</span>
-        <span class="plan-period">/Monat</span>
-      </div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>80 GB Datenvolumen (5G)</span><span data-tr>80 GB veri kotası (5G)</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>EU Roaming 80 GB inklusive</span><span data-tr>AB Dolaşım 80 GB dahil</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Flat Telefonie & SMS in DE</span><span data-tr>DE'de sınırsız telefon ve SMS</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>VoLTE, WLAN-Telefonie & HD Voice</span><span data-tr>VoLTE, WiFi & HD Ses</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>NexCell App & eSIM</span><span data-tr>NexCell Uygulama & eSIM</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Hotspot Sharing inklusive</span><span data-tr>Hotspot Paylaşımı dahil</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Priorität im Netz</span><span data-tr>Ağda Öncelik</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Kein Vertrag – monatlich kündbar</span><span data-tr>Sözleşmesiz – aylık iptal</span></li>
-      </ul>
-      <button class="btn-book btn-book-primary" onclick="openBooking('Smart M','34,95')">
-        <span data-de>Jetzt buchen</span>
-        <span data-tr>Hemen Al</span>
-      </button>
-    </div>
-
-    <!-- SMART XL -->
-    <div class="plan-card reveal reveal-delay-2">
-      <div class="plan-badge badge-xl">💎 Smart XL</div>
-      <div class="plan-name">Smart XL</div>
-      <div class="plan-tagline"><span data-de>Alles inklusive. Keine Grenzen.</span><span data-tr>Her şey dahil. Sınır yok.</span></div>
-      <div class="plan-data-pill" style="background:rgba(255,95,203,0.07);border-color:rgba(255,95,203,0.2)">
-        <div class="data-amount" style="color:var(--c-accent3)">∞</div>
-        <div>
-          <div class="data-label"><span data-de>Unbegrenzt + 5G Max</span><span data-tr>Sınırsız + 5G Max</span></div>
-          <div style="font-size:0.7rem;color:var(--c-accent3);font-weight:600"><span data-de>100 GB EU Roaming</span><span data-tr>100 GB AB Dolaşım</span> <span class="eu-badge" style="color:#ffaacc;border-color:rgba(255,170,200,0.3)">🇪🇺 EU</span></div>
+      <div class="plan hot r d2">
+        <div class="plan-top-badge" data-de>Beliebtester</div>
+        <div class="plan-top-badge" data-tr>En Popüler</div>
+        <div class="plan-tier">Smart M</div>
+        <div class="plan-name"><span data-de>Komfort</span><span data-tr>Konfor</span></div>
+        <div class="plan-desc"><span data-de>Mehr Power für deinen Alltag</span><span data-tr>Günlük yaşamın için daha fazla</span></div>
+        <div class="plan-data">
+          <div class="plan-data-num">80</div>
+          <div><div class="plan-data-unit">GB</div><div class="plan-data-eu">🇪🇺 EU Roaming</div></div>
         </div>
+        <div class="plan-price-row">
+          <span class="plan-eur">€</span>
+          <span class="plan-price">34<span style="font-size:1.4rem">.95</span></span>
+          <span class="plan-mo">/Monat</span>
+        </div>
+        <ul class="plan-feats">
+          <li><span class="f-check">✓</span><span data-de>80 GB Datenvolumen (5G)</span><span data-tr>80 GB veri kotası (5G)</span></li>
+          <li><span class="f-check">✓</span><span data-de>80 GB EU Roaming inkl.</span><span data-tr>80 GB AB Dolaşım dahil</span></li>
+          <li><span class="f-check">✓</span><span data-de>Telefon & SMS Flat DE</span><span data-tr>DE'de sınırsız telefon & SMS</span></li>
+          <li><span class="f-check">✓</span><span data-de>HD Voice & WLAN-Telefonie</span><span data-tr>HD Ses & WiFi Çağrısı</span></li>
+          <li><span class="f-check">✓</span><span data-de>Hotspot Sharing inkl.</span><span data-tr>Hotspot Paylaşımı dahil</span></li>
+          <li><span class="f-check">✓</span><span data-de>Höhere Netzpriorität</span><span data-tr>Yüksek ağ önceliği</span></li>
+          <li><span class="f-check">✓</span><span data-de>Monatlich kündbar</span><span data-tr>Aylık iptal edilebilir</span></li>
+        </ul>
+        <button class="btn-plan btn-plan-primary" onclick="book('Smart M','34,95','🚀')"><span data-de>Jetzt buchen</span><span data-tr>Hemen Al</span></button>
       </div>
-      <div class="plan-price-row">
-        <span class="plan-currency">€</span>
-        <span class="plan-price">54</span>
-        <span class="plan-price" style="font-size:2rem">.95</span>
-        <span class="plan-period">/Monat</span>
+      <div class="plan r d3">
+        <div class="plan-tier">Smart XL</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-desc"><span data-de>Unbegrenzt. Ohne Kompromisse.</span><span data-tr>Sınırsız. Uzlaşısız.</span></div>
+        <div class="plan-data">
+          <div class="plan-data-num" style="font-size:3.5rem">∞</div>
+          <div><div class="plan-data-unit"><span data-de>Unlimitiert</span><span data-tr>Sınırsız</span></div><div class="plan-data-eu">🇪🇺 100 GB EU</div></div>
+        </div>
+        <div class="plan-price-row">
+          <span class="plan-eur">€</span>
+          <span class="plan-price">54<span style="font-size:1.4rem">.95</span></span>
+          <span class="plan-mo">/Monat</span>
+        </div>
+        <ul class="plan-feats">
+          <li><span class="f-check">✓</span><span data-de>Unbegrenzt Daten (5G Max)</span><span data-tr>Sınırsız veri (5G Max)</span></li>
+          <li><span class="f-check">✓</span><span data-de>100 GB EU Roaming inkl.</span><span data-tr>100 GB AB Dolaşım dahil</span></li>
+          <li><span class="f-check">✓</span><span data-de>Telefon & SMS Flat EU</span><span data-tr>AB'de sınırsız telefon & SMS</span></li>
+          <li><span class="f-check">✓</span><span data-de>Hotspot + 5G Max</span><span data-tr>Hotspot + 5G Max</span></li>
+          <li><span class="f-check">✓</span><span data-de>Höchste Netzpriorität</span><span data-tr>En yüksek ağ önceliği</span></li>
+          <li><span class="f-check">✓</span><span data-de>Persönlicher Support</span><span data-tr>Kişisel destek</span></li>
+          <li><span class="f-check">✓</span><span data-de>Monatlich kündbar</span><span data-tr>Aylık iptal edilebilir</span></li>
+        </ul>
+        <button class="btn-plan btn-plan-outline" onclick="book('Smart XL','54,95','💎')"><span data-de>Jetzt buchen</span><span data-tr>Hemen Al</span></button>
       </div>
-      <div class="plan-divider"></div>
-      <ul class="plan-features">
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Unbegrenztes Datenvolumen (5G Max)</span><span data-tr>Sınırsız veri kotası (5G Max)</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>100 GB EU Roaming</span><span data-tr>100 GB AB Dolaşım</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Flat Telefonie & SMS in DE</span><span data-tr>DE'de sınırsız telefon ve SMS</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Flat Telefonie in EU</span><span data-tr>AB'de sınırsız görüşme</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Hotspot Sharing + 5G</span><span data-tr>Hotspot + 5G Paylaşım</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Höchste Netzpriorität</span><span data-tr>En yüksek ağ önceliği</span></li>
-        <li><span class="feat-icon feat-extra">★</span><span data-de>Persönlicher Serviceberater</span><span data-tr>Kişisel servis danışmanı</span></li>
-        <li><span class="feat-icon feat-yes">✓</span><span data-de>Kein Vertrag – monatlich kündbar</span><span data-tr>Sözleşmesiz – aylık iptal</span></li>
-      </ul>
-      <button class="btn-book btn-book-outline" onclick="openBooking('Smart XL','54,95')">
-        <span data-de>Jetzt buchen</span>
-        <span data-tr>Hemen Al</span>
-      </button>
     </div>
   </div>
 </section>
 
-<!-- COMPARISON TABLE -->
-<section id="compare">
-  <div class="section-header reveal">
-    <div class="section-tag"><span data-de>Vergleich</span><span data-tr>Karşılaştırma</span></div>
-    <h2 class="section-title"><span data-de>Was ist in jedem Tarif?</span><span data-tr>Her tarifde ne var?</span></h2>
-  </div>
-  <div class="compare-table-wrap reveal">
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th><span data-de>Feature</span><span data-tr>Özellik</span></th>
-          <th>Smart XS</th>
-          <th>Smart M</th>
-          <th>Smart XL</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span data-de>Datenvolumen DE</span><span data-tr>Veri Kotası DE</span></td>
-          <td class="highlight">40 GB</td>
-          <td class="highlight">80 GB</td>
-          <td class="highlight">∞ Unlimitiert</td>
-        </tr>
-        <tr>
-          <td>EU Roaming</td>
-          <td class="highlight">40 GB</td>
-          <td class="highlight">80 GB</td>
-          <td class="highlight">100 GB</td>
-        </tr>
-        <tr>
-          <td><span data-de>5G Netz</span><span data-tr>5G Şebeke</span></td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-          <td class="check">✔ Max</td>
-        </tr>
-        <tr>
-          <td><span data-de>Flat Telefonie DE</span><span data-tr>Sınırsız Telefon DE</span></td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-        </tr>
-        <tr>
-          <td><span data-de>Flat Telefonie EU</span><span data-tr>Sınırsız Telefon EU</span></td>
-          <td class="cross">–</td>
-          <td class="cross">–</td>
-          <td class="check">✔</td>
-        </tr>
-        <tr>
-          <td>Hotspot Sharing</td>
-          <td class="cross">–</td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-        </tr>
-        <tr>
-          <td>eSIM</td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-          <td class="check">✔</td>
-        </tr>
-        <tr>
-          <td><span data-de>Netzpriorität</span><span data-tr>Ağ Önceliği</span></td>
-          <td><span data-de>Standard</span><span data-tr>Standart</span></td>
-          <td><span data-de>Hoch</span><span data-tr>Yüksek</span></td>
-          <td><span data-de>Höchste</span><span data-tr>En Yüksek</span></td>
-        </tr>
-        <tr>
-          <td><span data-de>Preis/Monat</span><span data-tr>Fiyat/Ay</span></td>
-          <td class="highlight">19,95 €</td>
-          <td class="highlight">34,95 €</td>
-          <td class="highlight">54,95 €</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="section-header reveal">
-    <div class="section-tag"><span data-de>Warum NexCell?</span><span data-tr>Neden NexCell?</span></div>
-    <h2 class="section-title">
-      <span data-de>Mobilfunk, wie er sein sollte</span>
-      <span data-tr>Mobil iletişim olması gerektiği gibi</span>
-    </h2>
-  </div>
-  <div class="features-grid" style="max-width:1100px;margin:0 auto">
-    <div class="glass feat-card reveal">
-      <div class="feat-card-icon icon-cyan">📶</div>
-      <h3><span data-de>5G Überall</span><span data-tr>Her Yerde 5G</span></h3>
-      <p><span data-de>Unser 5G-Netz deckt 99,2 % der deutschen Bevölkerung ab. Maximale Geschwindigkeit, wo immer du bist.</span><span data-tr>5G şebekemiz Almanya nüfusunun %99,2'sini kapsıyor. Her nerede olursan ol maksimum hız.</span></p>
+<section id="features" class="section" style="background:#fff;border-top:1px solid var(--border)">
+  <div class="wrap">
+    <div class="r" style="text-align:center">
+      <span class="sec-tag"><span data-de>Warum NexCell</span><span data-tr>Neden NexCell</span></span>
+      <h2 class="sec-h"><span data-de>Mobilfunk wie er sein sollte</span><span data-tr>Olması gerektiği gibi</span></h2>
     </div>
-    <div class="glass feat-card reveal reveal-delay-1">
-      <div class="feat-card-icon icon-purple">🌍</div>
-      <h3><span data-de>EU Roaming inklusive</span><span data-tr>AB Dolaşımı Dahil</span></h3>
-      <p><span data-de>Surfe in über 30 EU-Ländern mit deinem deutschen Datenkontingent. Kein Aufpreis, keine bösen Überraschungen.</span><span data-tr>30'dan fazla AB ülkesinde Almanya veri kotanla sörf yap. Ek ücret yok, sürpriz yok.</span></p>
-    </div>
-    <div class="glass feat-card reveal reveal-delay-2">
-      <div class="feat-card-icon icon-green">🔓</div>
-      <h3><span data-de>Keine Vertragsbindung</span><span data-tr>Sözleşme Yok</span></h3>
-      <p><span data-de>Flexibel bleiben. Monatlich kündbar, ohne versteckte Gebühren oder lange Wartezeiten.</span><span data-tr>Esnek kal. Aylık iptal edilebilir, gizli ücret yok, uzun bekleme yok.</span></p>
-    </div>
-    <div class="glass feat-card reveal reveal-delay-3">
-      <div class="feat-card-icon icon-orange">⚡</div>
-      <h3>eSIM</h3>
-      <p><span data-de>Sofort aktivierbar. Kein Warten auf eine SIM-Karte. Scanne einfach den QR-Code und los geht's.</span><span data-tr>Anında etkinleştir. SIM kart beklemek yok. QR kodu tarat ve başla.</span></p>
-    </div>
-    <div class="glass feat-card reveal reveal-delay-4">
-      <div class="feat-card-icon icon-pink">🛡️</div>
-      <h3><span data-de>Datenschutz First</span><span data-tr>Önce Gizlilik</span></h3>
-      <p><span data-de>Deine Daten gehören dir. Keine Weitergabe an Dritte. DSGVO-konform und hosted in Deutschland.</span><span data-tr>Verilen sana ait. Üçüncü taraflara aktarım yok. GDPR uyumlu ve Almanya'da barındırılmış.</span></p>
-    </div>
-    <div class="glass feat-card reveal reveal-delay-5">
-      <div class="feat-card-icon icon-blue">💬</div>
-      <h3>24/7 Support</h3>
-      <p><span data-de>Unser Team ist rund um die Uhr für dich da. Per Chat, E-Mail oder Telefon – wir helfen immer.</span><span data-tr>Ekibimiz 7/24 senin için burada. Sohbet, e-posta veya telefon ile – her zaman yardım ederiz.</span></p>
+    <div class="feats-grid">
+      <div class="feat-card r d1"><span class="feat-icon">📶</span><h3><span data-de>5G deutschlandweit</span><span data-tr>Almanya genelinde 5G</span></h3><p><span data-de>99,2 % Bevölkerungsabdeckung. Schnell, stabil, zuverlässig.</span><span data-tr>%99,2 nüfus kapsamı. Hızlı, kararlı, güvenilir.</span></p></div>
+      <div class="feat-card r d2"><span class="feat-icon">🌍</span><h3><span data-de>EU Roaming ohne Aufpreis</span><span data-tr>Ek ücretsiz AB Dolaşımı</span></h3><p><span data-de>In 30+ EU-Ländern surfen – mit deinem deutschen Datenvolumen.</span><span data-tr>30+ AB ülkesinde sörf yap – Almanya veri kotanla.</span></p></div>
+      <div class="feat-card r d3"><span class="feat-icon">🔓</span><h3><span data-de>Kein Vertrag</span><span data-tr>Sözleşme Yok</span></h3><p><span data-de>Monatlich kündbar. Keine Mindestlaufzeit, keine Gebühren.</span><span data-tr>Aylık iptal. Minimum süre yok, ücret yok.</span></p></div>
+      <div class="feat-card r d4"><span class="feat-icon">⚡</span><h3>eSIM <span data-de>sofort</span><span data-tr>anında</span></h3><p><span data-de>QR-Code scannen – in Minuten aktiv. Keine Wartezeit.</span><span data-tr>QR kodu tara – dakikalar içinde aktif. Bekleme yok.</span></p></div>
+      <div class="feat-card r d5"><span class="feat-icon">🛡️</span><h3><span data-de>Datenschutz</span><span data-tr>Gizlilik</span></h3><p><span data-de>DSGVO-konform. Daten in Deutschland. Keine Weitergabe.</span><span data-tr>GDPR uyumlu. Veriler Almanya'da. Aktarım yok.</span></p></div>
+      <div class="feat-card r" style="transition-delay:.48s"><span class="feat-icon">💬</span><h3>24/7 Support</h3><p><span data-de>Immer erreichbar per Chat, E-Mail oder Telefon.</span><span data-tr>Her zaman sohbet, e-posta veya telefonla ulaşılabilir.</span></p></div>
     </div>
   </div>
 </section>
 
-<!-- NETWORK -->
-<section id="network">
-  <div class="network-inner">
-    <div class="network-text reveal">
-      <div class="section-tag"><span data-de>Netzabdeckung</span><span data-tr>Kapsama Alanı</span></div>
-      <h2><span data-de>Ein Netz das einfach funktioniert</span><span data-tr>Sadece çalışan bir şebeke</span></h2>
-      <p><span data-de>NexCell betreibt ein eigenes, modernes 5G-Netz in ganz Deutschland. Transparente Abdeckungsdaten, keine leeren Versprechen.</span><span data-tr>NexCell, tüm Almanya'da kendi modern 5G şebekesini işletmektedir. Şeffaf kapsama verileri, boş vaat yok.</span></p>
-      <div class="network-bars">
-        <div class="net-bar-row">
-          <div class="net-bar-label"><span data-de>5G Bevölkerungsabdeckung</span><span data-tr>5G Nüfus Kapsamı</span><span>99.2%</span></div>
-          <div class="net-bar-track"><div class="net-bar-fill" style="--w:0.992"></div></div>
-        </div>
-        <div class="net-bar-row">
-          <div class="net-bar-label"><span data-de>4G LTE Abdeckung</span><span data-tr>4G LTE Kapsamı</span><span>99.8%</span></div>
-          <div class="net-bar-track"><div class="net-bar-fill" style="--w:0.998"></div></div>
-        </div>
-        <div class="net-bar-row">
-          <div class="net-bar-label"><span data-de>Durchschn. Downloadspeed</span><span data-tr>Ort. İndirme Hızı</span><span>820 Mbit/s</span></div>
-          <div class="net-bar-track"><div class="net-bar-fill" style="--w:0.82"></div></div>
-        </div>
-        <div class="net-bar-row">
-          <div class="net-bar-label"><span data-de>Netzqualität (Ookla)</span><span data-tr>Ağ Kalitesi (Ookla)</span><span>94/100</span></div>
-          <div class="net-bar-track"><div class="net-bar-fill" style="--w:0.94"></div></div>
+<section id="coverage" class="section">
+  <div class="cov-inner">
+    <div>
+      <span class="sec-tag r"><span data-de>Netzabdeckung</span><span data-tr>Kapsama Alanı</span></span>
+      <h2 class="sec-h r d1"><span data-de>Ein Netz das einfach funktioniert</span><span data-tr>Sadece çalışan bir şebeke</span></h2>
+      <p class="sec-p r d2"><span data-de>NexCell betreibt ein eigenes 5G-Netz in ganz Deutschland. Transparente Daten, keine leeren Versprechen.</span><span data-tr>NexCell, tüm Almanya'da kendi 5G şebekesini işletmektedir. Şeffaf veriler, boş vaat yok.</span></p>
+      <div class="cov-bars">
+        <div class="r d3"><div class="cov-bar-labels"><span data-de>5G Bevölkerungsabdeckung</span><span data-tr>5G Nüfus Kapsamı</span><strong>99.2%</strong></div><div class="cov-track"><div class="cov-fill" data-w="99.2"></div></div></div>
+        <div class="r d4"><div class="cov-bar-labels"><span data-de>4G LTE Abdeckung</span><span data-tr>4G LTE Kapsamı</span><strong>99.8%</strong></div><div class="cov-track"><div class="cov-fill" data-w="99.8"></div></div></div>
+        <div class="r d5"><div class="cov-bar-labels"><span data-de>Ø Downloadgeschwindigkeit</span><span data-tr>Ort. İndirme Hızı</span><strong>820 Mbit/s</strong></div><div class="cov-track"><div class="cov-fill" data-w="82"></div></div></div>
+      </div>
+    </div>
+    <div class="cov-visual r d2">
+      <div class="cov-card-stack">
+        <div class="cov-card-bg"></div>
+        <div class="cov-card-bg"></div>
+        <div class="cov-card-main">
+          <div><h4 data-de>Bevölkerungsabdeckung</h4><h4 data-tr>Nüfus Kapsamı</h4><div class="cov-num">99<span>%</span></div></div>
+          <div class="cov-badge"><div class="cov-badge-dot"></div><span data-de>Netz aktiv</span><span data-tr>Şebeke aktif</span></div>
         </div>
       </div>
     </div>
-    <div class="network-visual reveal reveal-delay-2">
-      <div class="net-glow-ring ring-1"></div>
-      <div class="net-glow-ring ring-2"></div>
-      <div class="net-glow-ring ring-3"></div>
-      <div class="net-center">📡</div>
+  </div>
+</section>
+
+<section id="faq" class="section">
+  <div class="wrap">
+    <div class="r" style="text-align:center">
+      <span class="sec-tag">FAQ</span>
+      <h2 class="sec-h"><span data-de>Häufige Fragen</span><span data-tr>Sık Sorulan Sorular</span></h2>
     </div>
+    <div class="faq-list" id="faqList"></div>
   </div>
 </section>
 
-<!-- FAQ -->
-<section id="faq">
-  <div class="section-header reveal">
-    <div class="section-tag">FAQ</div>
-    <h2 class="section-title"><span data-de>Häufige Fragen</span><span data-tr>Sık Sorulan Sorular</span></h2>
-  </div>
-  <div class="faq-inner" id="faqContainer">
-    <!-- JS fills this -->
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="nav-logo" style="font-size:1.4rem">NexCell</div>
-        <p><span data-de>Mobilfunk neu gedacht. Fair, modern und ohne Kompromisse – für alle, die mehr vom Leben wollen.</span><span data-tr>Mobil iletişim yeniden düşünüldü. Adil, modern ve uzlaşısız – hayattan daha fazlasını isteyenler için.</span></p>
-      </div>
-      <div class="footer-col">
-        <h4><span data-de>Tarife</span><span data-tr>Tarifler</span></h4>
-        <ul>
-          <li><a href="#plans">Smart XS</a></li>
-          <li><a href="#plans">Smart M</a></li>
-          <li><a href="#plans">Smart XL</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4><span data-de>Unternehmen</span><span data-tr>Şirket</span></h4>
-        <ul>
-          <li><a href="#"><span data-de>Über uns</span><span data-tr>Hakkımızda</span></a></li>
-          <li><a href="#"><span data-de>Karriere</span><span data-tr>Kariyer</span></a></li>
-          <li><a href="#"><span data-de>Presse</span><span data-tr>Basın</span></a></li>
-          <li><a href="#"><span data-de>Blog</span><span data-tr>Blog</span></a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4><span data-de>Support</span><span data-tr>Destek</span></h4>
-        <ul>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#"><span data-de>Kontakt</span><span data-tr>İletişim</span></a></li>
-          <li><a href="#"><span data-de>Impressum</span><span data-tr>Künye</span></a></li>
-          <li><a href="#"><span data-de>Datenschutz</span><span data-tr>Gizlilik</span></a></li>
-        </ul>
-      </div>
+  <div class="footer-g">
+    <div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:1rem;font-weight:700;letter-spacing:-0.02em"><span class="logo-dot"></span>NexCell<span class="tr-suffix">TR</span></div>
+      <p class="footer-brand-desc"><span data-de>Mobilfunk neu gedacht. Fair, modern und transparent – ohne versteckte Kosten.</span><span data-tr>Mobil iletişim yeniden düşünüldü. Adil, modern ve şeffaf – gizli maliyet yok.</span></p>
     </div>
-    <div class="footer-bottom">
-      <span>© 2025 NexCell. <span data-de>Alle Rechte vorbehalten.</span><span data-tr>Tüm hakları saklıdır.</span></span>
-      <span><span data-de>Preise inkl. MwSt. · Kein Vertrag · monatlich kündbar</span><span data-tr>Fiyatlar KDV dahil · Sözleşmesiz · Aylık iptal</span></span>
+    <div class="footer-col">
+      <h5><span data-de>Tarife</span><span data-tr>Tarifler</span></h5>
+      <ul><li><a href="#plans">Smart XS</a></li><li><a href="#plans">Smart M</a></li><li><a href="#plans">Smart XL</a></li></ul>
     </div>
+    <div class="footer-col">
+      <h5><span data-de>Unternehmen</span><span data-tr>Şirket</span></h5>
+      <ul>
+        <li><a href="#"><span data-de>Über NexCell</span><span data-tr>Hakkımızda</span></a></li>
+        <li><a href="#"><span data-de>Karriere</span><span data-tr>Kariyer</span></a></li>
+        <li><a href="#"><span data-de>Presse</span><span data-tr>Basın</span></a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Support</h5>
+      <ul>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#"><span data-de>Kontakt</span><span data-tr>İletişim</span></a></li>
+        <li><a href="#"><span data-de>Impressum</span><span data-tr>Künye</span></a></li>
+        <li><a href="#"><span data-de>Datenschutz</span><span data-tr>Gizlilik</span></a></li>
+        <li><a href="#"><span data-de>AGB</span><span data-tr>Kullanım Şartları</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 NexCell. <span data-de>Alle Rechte vorbehalten.</span><span data-tr>Tüm hakları saklıdır.</span></span>
+    <span><span data-de>Alle Preise inkl. MwSt. · Kein Vertrag · Monatlich kündbar</span><span data-tr>Tüm fiyatlar KDV dahil · Sözleşmesiz · Aylık iptal</span></span>
   </div>
 </footer>
 
-<!-- BOOKING MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal" id="modalBox">
-    <button class="modal-close" onclick="closeBooking()">✕</button>
-
-    <div id="modalForm">
-      <div class="modal-plan-header">
-        <div class="modal-plan-icon" id="modalIcon">📱</div>
-        <div>
-          <div class="modal-plan-name" id="modalPlanName">Smart XS</div>
-          <div class="modal-plan-price" id="modalPlanPrice">19,95 € / <span data-de>Monat</span><span data-tr>Ay</span></div>
-        </div>
+<div class="overlay" id="overlay" onclick="closeIfOut(event)">
+  <div class="modal" id="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div id="mForm">
+      <div class="modal-plan-row">
+        <div class="modal-plan-ico" id="mIco">📱</div>
+        <div><div class="modal-plan-name" id="mName">Smart XS</div><div class="modal-plan-price" id="mPrice">19,95 € / Monat</div></div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label data-de>Vorname</label>
-          <label data-tr>Ad</label>
-          <input type="text" id="f_first" placeholder="Max" autocomplete="given-name">
-        </div>
-        <div class="form-group">
-          <label data-de>Nachname</label>
-          <label data-tr>Soyad</label>
-          <input type="text" id="f_last" placeholder="Mustermann" autocomplete="family-name">
-        </div>
+      <div class="form-row2">
+        <div class="form-g"><label data-de>Vorname</label><label data-tr>Ad</label><input id="fi_first" type="text" placeholder="Max" autocomplete="given-name"></div>
+        <div class="form-g"><label data-de>Nachname</label><label data-tr>Soyad</label><input id="fi_last" type="text" placeholder="Mustermann" autocomplete="family-name"></div>
       </div>
-      <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" id="f_email" placeholder="max@beispiel.de" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label data-de>Telefonnummer</label>
-        <label data-tr>Telefon Numarası</label>
-        <input type="tel" id="f_phone" placeholder="+49 1XX XXXXXXXX" autocomplete="tel">
-      </div>
-      <div class="form-group">
-        <label data-de>SIM-Typ</label>
-        <label data-tr>SIM Türü</label>
-        <select id="f_sim">
-          <option value="esim" data-de>eSIM (empfohlen)</option>
-          <option value="esim" data-tr>eSIM (önerilen)</option>
-          <option value="sim" data-de>Physische SIM</option>
-          <option value="sim" data-tr>Fiziksel SIM</option>
+      <div class="form-g"><label>E-Mail</label><input id="fi_email" type="email" placeholder="max@beispiel.de" autocomplete="email"></div>
+      <div class="form-g"><label data-de>Rufnummer</label><label data-tr>Telefon</label><input id="fi_phone" type="tel" placeholder="+49 1XX XXXXXXXX" autocomplete="tel"></div>
+      <div class="form-g">
+        <label data-de>SIM-Typ</label><label data-tr>SIM Türü</label>
+        <select id="fi_sim">
+          <option data-de>eSIM (empfohlen, sofort aktiv)</option>
+          <option data-tr>eSIM (önerilen, anında aktif)</option>
+          <option data-de>Physische SIM-Karte (per Post)</option>
+          <option data-tr>Fiziksel SIM Kart (posta ile)</option>
         </select>
       </div>
       <div class="form-check">
-        <input type="checkbox" id="f_terms">
-        <label for="f_terms">
+        <input type="checkbox" id="fi_terms">
+        <label for="fi_terms">
           <span data-de>Ich stimme den <a href="#">AGB</a> und der <a href="#">Datenschutzerklärung</a> zu.</span>
           <span data-tr><a href="#">Kullanım Şartları</a>'nı ve <a href="#">Gizlilik Politikası</a>'nı kabul ediyorum.</span>
         </label>
       </div>
-      <button class="btn-book btn-book-primary" onclick="submitBooking()">
-        <span data-de>Tarif buchen</span>
-        <span data-tr>Tarifi Al</span>
-      </button>
+      <button class="btn-plan btn-plan-primary" onclick="submitForm()"><span data-de>Tarif buchen</span><span data-tr>Tarifi Al</span></button>
     </div>
-
-    <div class="modal-success" id="modalSuccess">
-      <div class="success-icon">✓</div>
-      <h3><span data-de>Buchung erfolgreich!</span><span data-tr>Sipariş başarılı!</span></h3>
-      <p id="successMsg"></p>
+    <div class="modal-success" id="mSuccess">
+      <div class="success-check">✓</div>
+      <h3 data-de>Buchung bestätigt</h3><h3 data-tr>Sipariş Onaylandı</h3>
+      <p id="mSuccessMsg"></p>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="toast-icon">⚠️</span>
-  <span id="toastMsg"></span>
-</div>
+<div class="toast" id="toast"><span id="toastTxt"></span></div>
 
 <script>
-// ========== LANGUAGE ==========
-let currentLang = 'de';
-
-function setLang(lang) {
-  currentLang = lang;
-  document.body.setAttribute('data-lang', lang);
-  document.querySelectorAll('.lang-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', (i === 0 && lang === 'de') || (i === 1 && lang === 'tr'));
-  });
-  document.title = lang === 'tr' ? 'NexCell TR – Senin Şebeken.' : 'NexCell – Dein Netz. Deine Freiheit.';
+let lang = 'de';
+function setLang(l) {
+  lang = l;
+  document.documentElement.setAttribute('data-lang', l);
+  document.querySelectorAll('.lang-toggle button').forEach((b,i)=>b.classList.toggle('on',(i===0&&l==='de')||(i===1&&l==='tr')));
+  document.title = l==='tr' ? 'NexCell TR – Mobil İletişim' : 'NexCell – Mobilfunk';
   buildFAQ();
-  buildTicker();
 }
-
-// ========== TICKER ==========
-const tickerItems = {
-  de: ['5G Netz in ganz Deutschland','EU Roaming inklusive','Kein Vertrag – monatlich kündbar','Sofort aktiv mit eSIM','24/7 Kundensupport','Faire Preise ohne Kleingedrucktes','NexCell – Mobilfunk neu gedacht'],
-  tr: ['Tüm Almanya\'da 5G Şebeke','AB Dolaşımı dahil','Sözleşmesiz – aylık iptal','eSIM ile anında aktif','7/24 Müşteri Desteği','Gizli koşul olmadan adil fiyatlar','NexCell – Mobil iletişim yeniden']
-};
-
-function buildTicker() {
-  const items = tickerItems[currentLang];
-  const doubled = [...items, ...items];
-  const track = document.getElementById('tickerTrack');
-  track.innerHTML = doubled.map(t => `<span class="ticker-item"><span class="ticker-dot">●</span>${t}</span>`).join('');
-}
-
-// ========== FAQ ==========
-const faqs = {
-  de: [
-    { q: 'Gibt es eine Mindestvertragslaufzeit?', a: 'Nein. Alle NexCell-Tarife sind monatlich kündbar. Du gehst keine langfristige Bindung ein.' },
-    { q: 'Was ist EU Roaming?', a: 'Mit EU Roaming kannst du dein deutsches Datenvolumen in über 30 EU-Ländern nutzen, ohne Zusatzkosten.' },
-    { q: 'Wie funktioniert die eSIM?', a: 'Nach der Buchung erhältst du einen QR-Code per E-Mail. Scanne diesen mit deinem Smartphone und deine Verbindung ist sofort aktiv.' },
-    { q: 'Welche Geräte werden unterstützt?', a: 'Alle modernen Smartphones ab iPhone XS und Android-Geräte mit eSIM-Unterstützung. Physische SIM-Karten funktionieren mit allen Geräten.' },
-    { q: 'Kann ich meinen bestehenden Rufnummer mitnehmen?', a: 'Ja! Die Rufnummernmitnahme ist kostenlos und dauert in der Regel 1-2 Werktage.' },
+const FAQ = {
+  de:[
+    ['Gibt es eine Mindestvertragslaufzeit?','Nein. Alle Tarife sind monatlich kündbar. Kein Vertrag, keine Mindestlaufzeit, keine Gebühren beim Kündigen.'],
+    ['Was bedeutet EU Roaming inklusive?','Du nutzt dein deutsches Datenvolumen in 30+ EU-Ländern – ohne Aufpreis. Kein extra Roaming-Paket nötig.'],
+    ['Wie funktioniert die eSIM?','Nach der Buchung erhältst du per E-Mail einen QR-Code. Scannen, fertig. In wenigen Minuten aktiv.'],
+    ['Kann ich meine Rufnummer mitnehmen?','Ja, kostenlos. Rufnummernmitnahme dauert 1–2 Werktage. Einfach bei der Buchung angeben.'],
+    ['Ist NexCell DSGVO-konform?','Ja. Alle Daten werden in Deutschland gespeichert. Keine Weitergabe an Dritte.'],
   ],
-  tr: [
-    { q: 'Minimum sözleşme süresi var mı?', a: 'Hayır. Tüm NexCell tarifleri aylık iptal edilebilir. Uzun vadeli bir bağlılık taahhüt etmiyorsunuz.' },
-    { q: 'AB Dolaşımı nedir?', a: 'AB Dolaşımı ile Almanya veri kotanı 30\'dan fazla AB ülkesinde ek ücret ödemeden kullanabilirsiniz.' },
-    { q: 'eSIM nasıl çalışır?', a: 'Siparişten sonra e-posta ile QR kodu alırsınız. Akıllı telefonunuzla tarayın ve bağlantınız hemen aktif olur.' },
-    { q: 'Hangi cihazlar destekleniyor?', a: 'iPhone XS ve üstü tüm modern akıllı telefonlar ve eSIM destekli Android cihazlar. Fiziksel SIM tüm cihazlarda çalışır.' },
-    { q: 'Mevcut numaramı taşıyabilir miyim?', a: 'Evet! Numara taşıma ücretsizdir ve genellikle 1-2 iş günü sürer.' },
+  tr:[
+    ['Minimum sözleşme süresi var mı?','Hayır. Tüm tarifler aylık iptal edilebilir. Sözleşme yok, minimum süre yok, ücret yok.'],
+    ['AB Dolaşımı dahil ne demek?','30+ AB ülkesinde Almanya veri kotanı kullanırsın – ek ücret ödemeden. Ayrı paket gerekmez.'],
+    ['eSIM nasıl çalışır?','Siparişten sonra e-posta ile QR kodu alırsın. Tarat, bitti. Dakikalar içinde aktif.'],
+    ['Numaramı taşıyabilir miyim?','Evet, ücretsiz. 1–2 iş günü sürer. Siparişte mevcut numaranı belirt.'],
+    ['NexCell GDPR uyumlu mu?','Evet. Tüm veriler Almanya\'da saklanır. Üçüncü taraflara aktarım yapılmaz.'],
   ]
 };
-
 function buildFAQ() {
-  const container = document.getElementById('faqContainer');
-  const items = faqs[currentLang];
-  container.innerHTML = items.map((item, i) => `
-    <div class="faq-item" onclick="toggleFAQ(this)">
-      <div class="faq-q">
-        <span>${item.q}</span>
-        <div class="faq-arrow">▾</div>
-      </div>
-      <div class="faq-a">${item.a}</div>
-    </div>
-  `).join('');
+  document.getElementById('faqList').innerHTML = FAQ[lang].map(([q,a])=>`<div class="faq-row" onclick="toggleFAQ(this)"><div class="faq-q"><span>${q}</span><span class="faq-icon">+</span></div><div class="faq-a">${a}</div></div>`).join('');
 }
+function toggleFAQ(el) { const o=el.classList.contains('open'); document.querySelectorAll('.faq-row').forEach(r=>r.classList.remove('open')); if(!o) el.classList.add('open'); }
 
-function toggleFAQ(el) {
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
-  if (!isOpen) el.classList.add('open');
+let cur={};
+function book(plan,price,ico) {
+  cur={plan,price,ico};
+  document.getElementById('mIco').textContent=ico;
+  document.getElementById('mName').textContent=plan;
+  document.getElementById('mPrice').textContent=price+' € / '+(lang==='de'?'Monat':'Ay');
+  document.getElementById('mForm').style.display='';
+  document.getElementById('mSuccess').style.display='none';
+  ['fi_first','fi_last','fi_email','fi_phone'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fi_terms').checked=false;
+  document.getElementById('overlay').classList.add('on');
+  document.body.style.overflow='hidden';
 }
-
-// ========== BOOKING ==========
-let currentPlan = '';
-let currentPrice = '';
-
-function openBooking(plan, price) {
-  currentPlan = plan;
-  currentPrice = price;
-  document.getElementById('modalPlanName').textContent = plan;
-  document.getElementById('modalPlanPrice').innerHTML = price + ' € / <span data-de>Monat</span><span data-tr>Ay</span>';
-  document.getElementById('modalForm').style.display = '';
-  document.getElementById('modalSuccess').style.display = 'none';
-  const icons = { 'Smart XS': '📱', 'Smart M': '🚀', 'Smart XL': '💎' };
-  document.getElementById('modalIcon').textContent = icons[plan] || '📱';
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+function closeModal() { document.getElementById('overlay').classList.remove('on'); document.body.style.overflow=''; }
+function closeIfOut(e) { if(e.target===document.getElementById('overlay')) closeModal(); }
+function submitForm() {
+  const f=id=>document.getElementById(id).value.trim();
+  const e={de:{fill:'Bitte alle Felder ausfüllen.',mail:'Ungültige E-Mail.',terms:'Bitte AGB akzeptieren.'},tr:{fill:'Lütfen tüm alanları doldurun.',mail:'Geçersiz e-posta.',terms:'Lütfen şartları kabul edin.'}}[lang];
+  if(!f('fi_first')||!f('fi_last')||!f('fi_email')||!f('fi_phone')) return toast(e.fill);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f('fi_email'))) return toast(e.mail);
+  if(!document.getElementById('fi_terms').checked) return toast(e.terms);
+  document.getElementById('mForm').style.display='none';
+  document.getElementById('mSuccess').style.display='';
+  document.getElementById('mSuccessMsg').textContent = lang==='de'
+    ? `Willkommen, ${f('fi_first')}! Dein ${cur.plan}-Tarif (${cur.price} €/Monat) ist gebucht. Bestätigung an ${f('fi_email')}.`
+    : `Hoş geldin, ${f('fi_first')}! ${cur.plan} tarifiniz (${cur.price} €/ay) onaylandı. ${f('fi_email')} adresine bilgi gönderildi.`;
 }
+function toast(msg) { const t=document.getElementById('toast'); document.getElementById('toastTxt').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
+function goPlan() { document.getElementById('plans').scrollIntoView({behavior:'smooth'}); }
+function goCov() { document.getElementById('coverage').scrollIntoView({behavior:'smooth'}); }
 
-function closeBooking() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  // reset form
-  ['f_first','f_last','f_email','f_phone'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f_terms').checked = false;
-}
+// reveal
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
 
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeBooking();
-}
+// bars
+const bObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.cov-fill').forEach(f=>f.style.width=f.dataset.w+'%');bObs.unobserve(e.target);}}),{threshold:0.4});
+document.querySelectorAll('.cov-bars').forEach(el=>bObs.observe(el));
 
-function submitBooking() {
-  const first = document.getElementById('f_first').value.trim();
-  const last = document.getElementById('f_last').value.trim();
-  const email = document.getElementById('f_email').value.trim();
-  const phone = document.getElementById('f_phone').value.trim();
-  const terms = document.getElementById('f_terms').checked;
-
-  const msgs = {
-    de: { fillAll: 'Bitte alle Pflichtfelder ausfüllen.', email: 'Bitte eine gültige E-Mail-Adresse eingeben.', terms: 'Bitte AGB und Datenschutz akzeptieren.' },
-    tr: { fillAll: 'Lütfen tüm zorunlu alanları doldurun.', email: 'Lütfen geçerli bir e-posta adresi girin.', terms: 'Lütfen Kullanım Şartları\'nı kabul edin.' }
-  };
-  const m = msgs[currentLang];
-
-  if (!first || !last || !email || !phone) return showToast(m.fillAll, '⚠️');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast(m.email, '📧');
-  if (!terms) return showToast(m.terms, '📜');
-
-  // Show success
-  document.getElementById('modalForm').style.display = 'none';
-  document.getElementById('modalSuccess').style.display = '';
-  const msg = currentLang === 'de'
-    ? `Willkommen bei NexCell, ${first}! Deine Buchung für den ${currentPlan}-Tarif (${currentPrice} €/Monat) ist bestätigt. Du erhältst in Kürze eine E-Mail an ${email}.`
-    : `NexCell'e hoş geldin, ${first}! ${currentPlan} tarifi için siparişin (${currentPrice} €/ay) onaylandı. Kısa süre içinde ${email} adresine e-posta alacaksın.`;
-  document.getElementById('successMsg').textContent = msg;
-}
-
-// ========== TOAST ==========
-function showToast(msg, icon = '⚠️') {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.querySelector('.toast-icon').textContent = icon;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-// ========== SCROLL REVEAL ==========
-const revealEls = document.querySelectorAll('.reveal');
-const ro = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
-}, { threshold: 0.12 });
-revealEls.forEach(el => ro.observe(el));
-
-// ========== NETWORK BARS ==========
-const bars = document.querySelectorAll('.net-bar-fill');
-const barObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const w = e.target.style.getPropertyValue('--w') || '1';
-      e.target.style.width = (parseFloat(w) * 100) + '%';
-      e.target.classList.add('animated');
-      barObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
-bars.forEach(b => { b.style.width = '0%'; barObs.observe(b); });
-
-// ========== MOBILE MENU ==========
-function toggleMobileMenu() {
-  // Simple scroll to plans on mobile
-  document.getElementById('plans').scrollIntoView({ behavior: 'smooth' });
-}
-
-function scrollToPlans() {
-  document.getElementById('plans').scrollIntoView({ behavior: 'smooth' });
-}
-
-// ========== INIT ==========
-buildTicker();
 buildFAQ();
-
-// Animate orb colors on scroll
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  document.querySelector('.orb-1').style.transform = `translate(${y*0.03}px, ${y*0.05}px)`;
-  document.querySelector('.orb-2').style.transform = `translate(${-y*0.02}px, ${-y*0.03}px)`;
-});
-
-// Nav background on scroll
-window.addEventListener('scroll', () => {
-  const nav = document.querySelector('nav');
-  nav.style.background = window.scrollY > 60 ? 'rgba(6,10,20,0.92)' : 'rgba(6,10,20,0.5)';
-});
 </script>
 </body>
 </html>
